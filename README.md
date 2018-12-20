@@ -1,4 +1,4 @@
-# mariadb:10.1-alpine
+# mariadb:10.2-alpine
 
 <p align="center">
 	<img alt="logo-docker" class="avatar rounded-2" height="150" src="https://avatars2.githubusercontent.com/u/35675959?s=400&u=b1f9ebca6fa8e5be55cb524e16f38b52f2f1dd58&v=4" width="160">
@@ -19,7 +19,7 @@ As palavras-chave "DEVE", "NÃO DEVE", "REQUER", "DEVERIA", "NÃO DEVERIA", "POD
 
 ## Pacotes presentes na imagem
 
- - MariaDB 10.1
+ - MariaDB 10.2
 
 ## Considerações relevantes
 
@@ -32,7 +32,7 @@ As palavras-chave "DEVE", "NÃO DEVE", "REQUER", "DEVERIA", "NÃO DEVERIA", "POD
 Essa instrução cria o container utilizando um volume compartilhado, essa abordagem permite persistir a base de dados fora do container:
 
 ```
-docker run -d --name mariadb -p 3306:3306 -v $(pwd)/mysql/tmp:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root fabiojanio/mariadb:10.1-alpine
+docker run -d --name mariadb -p 3306:3306 -v mariadb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root fabiojanio/mariadb:10.2-alpine
 ```
 
 Veja a lista de variáveis que podem ser passadas como parâmetro na criação do container. Ao omitir essas variaveis na criação do container, o respectivo valor padrão será atribuido:
@@ -50,12 +50,12 @@ Veja a lista de variáveis que podem ser passadas como parâmetro na criação d
 Após a criação do container é possível se conectar a ele desta forma:
 
 ```
-docker exec -it mariadb /bin/sh
+docker exec -it mariadb sh
 ```
 
 ## docker-compose.yml
 
-Para subir o ambiente utilizando o docker-compose, efetue o download do arquivo [**docker-compose.yml**](docker-compose.yml), acesse o diretório onde o arquivo foi baixado e execute:
+Disponibilizei um [**docker-compose.yml**](docker-compose.yml) prontinho para subir uma aplicação *php + apache + banco de dados MariaDB*, efetue o download do arquivo, modifique os parâmetros necessários e posteriormente execute a instrução abaixo no mesmo local em que se encontra o arquivo [**docker-compose.yml**](docker-compose.yml):
 
 ```
 docker-compose up -d
@@ -64,27 +64,32 @@ docker-compose up -d
 Neste arquivo os containers estão nomeados como **web** e **mariadb**. Para se conectar:
 
 ```
-docker exec -it mariadb /bin/sh
+docker exec -it web bash
+```
+e
+
+```
+docker exec -it mariadb sh
 ```
 
 ## Build (opcional)
 
-Os passos anteriores estão configurados para utilizar a imagem já compilada disponível no **Docker Hub**, entretanto, caso queira compilar sua própria imagem, basta efetuar o download do arquivo [**Dockerfile**](Dockerfile) e executar a instrução:
+Os passos anteriores estão configurados para utilizar a imagem já compilada disponível no **Docker Hub**, entretanto, caso queira compilar sua própria imagem, basta efetuar o download do arquivo [**Dockerfile**](Dockerfile), [**mysql_start.sh**](mysql_start.sh) e [**my.cnf**](my.cnf), modificar o que for necessário e executar a instrução:
 
 ```
-docker build -t mariadb:10.1 .
+docker build -t mariadb:10.2 .
 ```
 
 Posteriormente pode criar o container executando:
 
 ```
-docker run -d --name mariadb -p 3306:3306 -v $(pwd)/mysql/tmp:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root mariadb:10.1
+docker run -d --name mariadb -p 3306:3306 -v mariadb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root mariadb:10.2
 ```
 
 E para conectar ao container executando:
 
 ```
-docker exec -it mariadb /bin/sh
+docker exec -it mariadb sh
 ```
 
 ## Licença MIT

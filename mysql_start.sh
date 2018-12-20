@@ -5,7 +5,7 @@
 
 if [ ! -d /var/lib/mysql/mysql ]; then
 
-  echo "=> Criando diretório de dados..."
+  echo "[i] Criando diretório de dados..."
 
   mysql_install_db --user=root > /dev/null
 
@@ -17,11 +17,18 @@ if [ ! -d /var/lib/mysql/mysql ]; then
   CHARACTER_SET_SERVER=${CHARACTER_SET_SERVER:-"utf8"}
   COLLATION_SERVER=${COLLATION_SERVER:-"utf8_unicode_ci"}
 
+  if [ ! "$MYSQL_ROOT_PASSWORD" ]; then
+    echo "[i] Senha do usuário ROOT: $MYSQL_ROOT_PASSWORD"
+  fi
+
   sed -i "s/3306/$MYSQL_PORT/" /etc/mysql/my.cnf
   sed -i "s/utf8/$CHARACTER_SET_SERVER/" /etc/mysql/my.cnf
   sed -i "s/utf8_unicode_ci/$COLLATION_SERVER/" /etc/mysql/my.cnf
 
   tfile=`mktemp`
+  if [ ! -f "$tfile" ]; then
+      return 1
+  fi
 
   cat << EOF > $tfile
 USE mysql;
@@ -33,7 +40,7 @@ EOF
 
   if [ "$MYSQL_DATABASE" != "" ]; then
     echo "=> Criando banco: $MYSQL_DATABASE"
-    echo "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\` CHARACTER SET utf8 COLLATE utf8_general_ci;" >> $tfile
+    echo "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\` CHARACTER SET $CHARACTER_SET_SERVER COLLATE $COLLATION_SERVER;" >> $tfile
 
     if [ "$MYSQL_USER" != "" ]; then
       echo "=> Criando usuário: $MYSQL_USER com a senha: $MYSQL_PASSWORD"
