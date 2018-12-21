@@ -9,7 +9,7 @@
 	</a>
 </p>
 
-Essa é uma imagem **docker** criada para start simplificado de bases de dados utilizando o motor **MariaDB**.
+Essa é uma imagem **docker** criada para start simplificado de bases de dados utilizando o motor **MariaDB**, tendo como base um sistema minimalista, simples, flexível e robusto chamado Alpine.
 
 As palavras-chave "DEVE", "NÃO DEVE", "REQUER", "DEVERIA", "NÃO DEVERIA", "PODERIA", "NÃO PODERIA", "RECOMENDÁVEL", "PODE", e "OPCIONAL" presentes em qualquer parte deste repositório devem ser interpretadas como descritas no [RFC 2119](http://tools.ietf.org/html/rfc2119). Tradução livre [RFC 2119 pt-br](http://rfc.pt.webiwg.org/rfc2119).
 
@@ -25,7 +25,7 @@ As palavras-chave "DEVE", "NÃO DEVE", "REQUER", "DEVERIA", "NÃO DEVERIA", "POD
 
 ## Start container
 
-Essa instrução cria o container utilizando um volume compartilhado, essa abordagem permite persistir a base de dados fora do container:
+Essa instrução cria o container utilizando um volume, essa abordagem permite persistir a base de dados fora do container:
 
 ```
 docker run -d --name mariadb -p 3306:3306 -v mariadb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root fabiojanio/mariadb
@@ -41,7 +41,7 @@ Veja a lista de variáveis que podem ser passadas como parâmetro na criação d
  - MYSQL_CHARACTER=utf8
  - MYSQL_COLLATION_SERVER=utf8_unicode_ci
 
-**Obs**: observe que criamos o contaienr com a opção "-d", ou seja, ele será executado em background, como um daemon. Caso tenha a intenção de acompanhar o output da console, altere esse parâmetro para "-it".
+**Obs**: caso o volume de dados já exista, ao criar um novo container a senha do usuário ROOT será preservada, este comportamento foi configurado no [**mysql_start.sh**](https://github.com/docker-sources/mariadb/blob/master/mysql_start.sh) como forma de evitar alterações "descuidadas por parte do usuário.
 
 Após a criação do container é possível se conectar a ele desta forma:
 
@@ -51,7 +51,7 @@ docker exec -it mariadb sh
 
 ## docker-compose.yml
 
-Disponibilizei um [**docker-compose.yml**](docker-compose.yml) prontinho para subir uma aplicação *php + apache + banco de dados MariaDB*, efetue o download do arquivo, modifique os parâmetros necessários e posteriormente execute a instrução abaixo no mesmo local em que se encontra o arquivo [**docker-compose.yml**](docker-compose.yml):
+Disponibilizei um [**docker-compose.yml**](https://github.com/docker-sources/mariadb/blob/master/docker-compose.yml) prontinho para subir uma aplicação *php + apache + banco de dados MariaDB*, efetue o download do arquivo, modifique os parâmetros necessários e posteriormente execute a instrução abaixo no mesmo local em que se encontra o arquivo [**docker-compose.yml**](https://github.com/docker-sources/mariadb/blob/master/docker-compose.yml):
 
 ```
 docker-compose up -d
@@ -90,4 +90,4 @@ docker exec -it mariadb sh
 
 ## Licença MIT
 
-Para maiores informações, leia o arquivo de [licença](LICENSE) disponível neste repositório.
+Para maiores informações, leia o arquivo de [licença](https://github.com/docker-sources/mariadb/blob/master/LICENSE) disponível neste repositório.
